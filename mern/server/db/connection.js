@@ -1,5 +1,5 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
-
+//add URI here
 const client = new MongoClient(URI, {
   serverApi: {
     version: ServerApiVersion.v1,
