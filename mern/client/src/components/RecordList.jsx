@@ -96,10 +96,6 @@ export default function RecordList() {
       const updatedRecords = records.filter(function (val) {
       var returnVal = false;
       for (let i = 0; i < checkboxValue.length; i++) {
-        console.log("Checkbox value:");
-        console.log(checkboxValue[i].value);
-        console.log("val level:");
-        console.log(val.level);
         if (val.level === checkboxValue[i].value) {
           returnVal = true;
         }
