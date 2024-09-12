@@ -88,7 +88,6 @@ export default function RecordList() {
       .then(data => setRecords(data))
       .catch(error => console.error('Error fetching records:', error));
     } else {
-      console.log("I'm working!")
       await fetch(`http://localhost:5050/record/`)
       .then(response => response.json())
       .then(data => setRecords(data))
