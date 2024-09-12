@@ -14,7 +14,7 @@ export default function Record() {
   useEffect(() => {
     async function fetchData() {
       const id = params.id?.toString() || undefined;
-      if(!id) return;
+      if (!id) return;
       setIsNew(false);
       const response = await fetch(
         `http://localhost:5050/record/${params.id.toString()}`
@@ -73,7 +73,7 @@ export default function Record() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
     } catch (error) {
-      console.error('A problem occurred adding or updating a record: ', error);
+      console.error("A problem occurred adding or updating a record: ", error);
     } finally {
       setForm({ name: "", position: "", level: "" });
       navigate("/");
@@ -83,7 +83,9 @@ export default function Record() {
   // This following section will display the form that takes the input from the user.
   return (
     <>
-      <h3 className="text-lg font-semibold p-4">Create/Update Employee Record</h3>
+      <h3 className="text-lg font-semibold p-4">
+        Create/Update Employee Record
+      </h3>
       <form
         onSubmit={onSubmit}
         className="border rounded-lg overflow-hidden p-4"
