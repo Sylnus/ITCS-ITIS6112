@@ -2,6 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from 'xlsx';
 import { v4 as uuidv4 } from 'uuid';
+import CheckboxDropdownComponent, {
+  createStyles
+} from "react-checkbox-dropdown";
 
 //creates table
 const Record = ({ record, editRecord, deleteRecord }) => (
@@ -34,6 +37,11 @@ export default function RecordList() {
   const [hasUnsavedRecords, setHasUnsavedRecords] = useState(false);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+
+  //dropdown
+  const DropdownOptions = ["Intern", "Junior", "Senior"].map(item => ({ value: item, label: item }));
+  const [checkboxValue, setCheckboxValue] = useState([]);
+
   // This method fetches the records from the database.
   useEffect(() => {
     fetch(`http://localhost:5050/record/`)
@@ -72,6 +80,35 @@ export default function RecordList() {
       reader.readAsArrayBuffer(file);
     }
   };
+//handles filtering results from dropdown
+  const handleCheckbox = async () => {
+    if(checkboxValue.length === 0) {
+      await fetch(`http://localhost:5050/record/`)
+      .then(response => response.json())
+      .then(data => setRecords(data))
+      .catch(error => console.error('Error fetching records:', error));
+    } else {
+      console.log("I'm working!")
+      await fetch(`http://localhost:5050/record/`)
+      .then(response => response.json())
+      .then(data => setRecords(data))
+      .catch(error => console.error('Error fetching records:', error));
+      const updatedRecords = records.filter(function (val) {
+      var returnVal = false;
+      for (let i = 0; i < checkboxValue.length; i++) {
+        console.log("Checkbox value:");
+        console.log(checkboxValue[i].value);
+        console.log("val level:");
+        console.log(val.level);
+        if (val.level === checkboxValue[i].value) {
+          returnVal = true;
+        }
+      }
+      return returnVal;
+    });
+    setRecords(updatedRecords)
+    }
+  }
 //handles saving records with database
   const handleSave = async () => {
     const newRecords = records.filter(record => record.isNew);
@@ -118,6 +155,30 @@ export default function RecordList() {
   return (
     <div className="container mx-auto p-4">
       <h3 className="text-lg font-semibold mb-4">Employee Records</h3>
+      <div className="default">
+        <CheckboxDropdownComponent
+          displayText="Filter by Level"
+          options={DropdownOptions}
+          onChange={option => {
+            if (!checkboxValue.includes(option)) {
+              console.log('change');
+              const newValue = [...checkboxValue, option];
+              setCheckboxValue(newValue);
+            }
+            handleCheckbox();
+          }}
+          onDeselectOption={option => {
+            console.log('deselect');
+            const filteredOptions = checkboxValue.filter(
+              item => item.value !== option.value
+            );
+            setCheckboxValue(filteredOptions);
+            handleCheckbox();
+          }}
+          value={checkboxValue}
+          isStrict={true}
+        />
+      </div>
       <div className="border rounded-lg overflow-hidden">
         <div className="relative w-full overflow-auto">
           <table className="w-full text-sm">
