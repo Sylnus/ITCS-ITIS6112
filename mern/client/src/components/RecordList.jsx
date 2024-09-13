@@ -186,8 +186,9 @@ export default function RecordList() {
     if (query === "") {
       setRecords(allRecords);
     } else {
-      const filteredRecords = allRecords.filter((record) =>
-        record.name.toLowerCase().includes(query)
+      const filteredRecords = allRecords.filter(record =>
+        record.name.toLowerCase().includes(query) ||
+        record.position.toLowerCase().includes(query)
       );
       setRecords(filteredRecords);
     }
